@@ -3,6 +3,7 @@ package com.example.api;
 import com.example.common.model.User;
 import com.example.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import spark.Request;
 import spark.Response;
 
@@ -14,10 +15,12 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
+        this.objectMapper.registerModule(new JavaTimeModule());
         setupRoutes();
     }
 
     private void setupRoutes() {
+        get("/hello", (req, res) -> "Hello World");
         post("/register", this::registerUser);
     }
 
