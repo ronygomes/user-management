@@ -5,6 +5,9 @@ import com.example.service.UserService;
 import com.example.service.UserServiceImpl;
 import com.example.service.validator.*;
 import com.mongodb.client.MongoClients;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 import java.util.List;
 
@@ -19,6 +22,10 @@ public class MainApplication {
         var mongoClient = MongoClients.create(mongoUri);
         var userRepository = new MongoUserRepository(mongoClient, dbName);
 
+        // Initialize Bean Validation
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        Validator validator = factory.getValidator();
+
         // Initialize Validators
         var validators = List.of(
                 new EmailUniquenessValidator(userRepository),
@@ -27,7 +34,7 @@ public class MainApplication {
                 new AgePolicyValidator(13),
                 new NameValidator());
 
-        UserService userService = new UserServiceImpl(userRepository, validators);
+        UserService userService = new UserServiceImpl(userRepository, validators, validator);
 
         port(8080);
 

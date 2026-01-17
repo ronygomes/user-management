@@ -1,6 +1,8 @@
 package com.example.api;
 
-import com.example.common.model.User;
+import com.example.common.dto.UserRegistrationDTO;
+import com.example.common.dto.UserResponseDTO;
+import com.example.common.dto.UserUpdateDTO;
 import com.example.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
@@ -15,7 +17,7 @@ public class UserController {
 
     public UserController(UserService userService) {
         this.userService = userService;
-        this.objectMapper.registerModule(new JavaTimeModule());
+        this.objectMapper.registerModule(new JavaTimeModule()); // For LocalDate
         setupRoutes();
     }
 
@@ -27,26 +29,30 @@ public class UserController {
 
     private String registerUser(Request req, Response res) {
         try {
-            User user = objectMapper.readValue(req.body(), User.class);
-            userService.registerUser(user);
+            UserRegistrationDTO registrationDTO = objectMapper.readValue(req.body(), UserRegistrationDTO.class);
+            UserResponseDTO response = userService.registerUser(registrationDTO);
             res.status(201);
-            return objectMapper.writeValueAsString(user);
+            res.type("application/json");
+            return objectMapper.writeValueAsString(response);
         } catch (Exception e) {
             res.status(400);
-            return "{\"error\": \"" + e.getMessage() + "\"}";
+            res.type("application/json");
+            return "{\"error\": \"" + e.getMessage().replace("\"", "\\\"") + "\"}";
         }
     }
 
     private String updateUser(Request req, Response res) {
         try {
             String id = req.params(":id");
-            User user = objectMapper.readValue(req.body(), User.class);
-            userService.updateUser(id, user);
+            UserUpdateDTO updateDTO = objectMapper.readValue(req.body(), UserUpdateDTO.class);
+            UserResponseDTO response = userService.updateUser(id, updateDTO);
             res.status(200);
-            return "{\"message\": \"User updated successfully\"}";
+            res.type("application/json");
+            return objectMapper.writeValueAsString(response);
         } catch (Exception e) {
             res.status(400);
-            return "{\"error\": \"" + e.getMessage() + "\"}";
+            res.type("application/json");
+            return "{\"error\": \"" + e.getMessage().replace("\"", "\\\"") + "\"}";
         }
     }
 }

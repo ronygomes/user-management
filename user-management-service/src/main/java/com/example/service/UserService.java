@@ -1,9 +1,12 @@
 package com.example.service;
 
-import com.example.common.model.User;
+import com.example.common.dto.UserRegistrationDTO;
+import com.example.common.dto.UserResponseDTO;
+import com.example.common.dto.UserUpdateDTO;
 
 public interface UserService {
-    void registerUser(User user);
 
-    void updateUser(String id, User user);
+    UserResponseDTO registerUser(UserRegistrationDTO registrationDTO);
+
+    UserResponseDTO updateUser(String id, UserUpdateDTO updateDTO);
 }
