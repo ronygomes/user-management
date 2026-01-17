@@ -17,9 +17,14 @@ public class PhoneUniquenessValidator implements UserValidator {
         if (user.getPhoneNumber() != null) {
             Optional<User> existing = userRepository.findByPhoneNumber(user.getPhoneNumber());
             if (existing.isPresent()) {
+                // Skip validation if the existing user is the same as the one being validated
+                if (user.getId() != null && user.getId().equals(existing.get().getId())) {
+                    return;
+                }
+
                 if (existing.get().isDeleted()) {
                     throw new RuntimeException(
-                            "Registration blocked: User previously existed but was soft-deleted. Please contact admin.");
+                            "Registration/Update blocked: User previously existed but was soft-deleted. Please contact admin.");
                 }
                 throw new RuntimeException("Phone number already exists");
             }

@@ -32,4 +32,37 @@ public class UserServiceImpl implements UserService {
         // 4. Persistence
         userRepository.save(user);
     }
+
+    @Override
+    public void updateUser(String id, User updatedUser) {
+        // 1. Fetch existing user
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        // 2. Map allowed fields
+        if (updatedUser.getDisplayName() != null)
+            existingUser.setDisplayName(updatedUser.getDisplayName());
+        if (updatedUser.getFirstName() != null)
+            existingUser.setFirstName(updatedUser.getFirstName());
+        if (updatedUser.getLastName() != null)
+            existingUser.setLastName(updatedUser.getLastName());
+        if (updatedUser.getDateOfBirth() != null)
+            existingUser.setDateOfBirth(updatedUser.getDateOfBirth());
+        if (updatedUser.getPhoneNumber() != null)
+            existingUser.setPhoneNumber(updatedUser.getPhoneNumber());
+        if (updatedUser.getUsername() != null)
+            existingUser.setUsername(updatedUser.getUsername());
+
+        // Note: Password, Email, and IsDeleted are explicitly NOT updated here per
+        // requirements
+
+        // 3. Normalization logic
+        existingUser.setPhoneNumber(ValidationUtils.formatPhoneNumber(existingUser.getPhoneNumber(), "BD"));
+
+        // 4. Re-run business validation strategies
+        validators.forEach(v -> v.validate(existingUser));
+
+        // 5. Persistence
+        userRepository.save(existingUser);
+    }
 }

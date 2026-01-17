@@ -16,9 +16,14 @@ public class EmailUniquenessValidator implements UserValidator {
     public void validate(User user) {
         Optional<User> existing = userRepository.findByEmail(user.getEmail());
         if (existing.isPresent()) {
+            // Skip validation if the existing user is the same as the one being validated
+            if (user.getId() != null && user.getId().equals(existing.get().getId())) {
+                return;
+            }
+
             if (existing.get().isDeleted()) {
                 throw new RuntimeException(
-                        "Registration blocked: User previously existed but was soft-deleted. Please contact admin.");
+                        "Registration/Update blocked: User previously existed but was soft-deleted. Please contact admin.");
             }
             throw new RuntimeException("Email already exists");
         }

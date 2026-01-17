@@ -22,6 +22,7 @@ public class UserController {
     private void setupRoutes() {
         get("/hello", (req, res) -> "Hello World");
         post("/register", this::registerUser);
+        put("/users/:id", this::updateUser);
     }
 
     private String registerUser(Request req, Response res) {
@@ -30,6 +31,19 @@ public class UserController {
             userService.registerUser(user);
             res.status(201);
             return objectMapper.writeValueAsString(user);
+        } catch (Exception e) {
+            res.status(400);
+            return "{\"error\": \"" + e.getMessage() + "\"}";
+        }
+    }
+
+    private String updateUser(Request req, Response res) {
+        try {
+            String id = req.params(":id");
+            User user = objectMapper.readValue(req.body(), User.class);
+            userService.updateUser(id, user);
+            res.status(200);
+            return "{\"message\": \"User updated successfully\"}";
         } catch (Exception e) {
             res.status(400);
             return "{\"error\": \"" + e.getMessage() + "\"}";
