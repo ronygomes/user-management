@@ -1,6 +1,7 @@
 package com.example.api;
 
 import com.example.repository.mongodb.MongoUserRepository;
+import com.example.service.SimpleEmailServiceImpl;
 import com.example.service.UserService;
 import com.example.service.UserServiceImpl;
 import com.example.service.validator.*;
@@ -11,7 +12,8 @@ import jakarta.validation.ValidatorFactory;
 
 import java.util.List;
 
-import static spark.Spark.*;
+import static spark.Spark.port;
+import static spark.Spark.stop;
 
 public class MainApplication {
     public static void main(String[] args) {
@@ -26,6 +28,15 @@ public class MainApplication {
         ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
         Validator validator = factory.getValidator();
 
+        // Initialize Email Service
+        String smtpHost = System.getProperty("smtp.host", "sandbox.smtp.mailtrap.io");
+        int smtpPort = Integer.getInteger("smtp.port", 25);
+        String smtpUser = System.getProperty("smtp.username", "8ba1d650eb9fb3");
+        String smtpPass = System.getProperty("smtp.password", "ee9e0484aeef9a");
+        String fromEmail = System.getProperty("smtp.from", "noreply@example.com");
+
+        var emailService = new SimpleEmailServiceImpl(smtpHost, smtpPort, smtpUser, smtpPass, fromEmail);
+
         // Initialize Validators
         var validators = List.of(
                 new EmailUniquenessValidator(userRepository),
@@ -34,7 +45,7 @@ public class MainApplication {
                 new AgePolicyValidator(13),
                 new NameValidator());
 
-        UserService userService = new UserServiceImpl(userRepository, validators, validator);
+        UserService userService = new UserServiceImpl(userRepository, validators, validator, emailService);
 
         port(8080);
 

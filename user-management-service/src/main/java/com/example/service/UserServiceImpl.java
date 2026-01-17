@@ -20,11 +20,14 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     private final List<UserValidator> validators;
     private final Validator beanValidator;
+    private final EmailService emailService;
 
-    public UserServiceImpl(UserRepository userRepository, List<UserValidator> validators, Validator beanValidator) {
+    public UserServiceImpl(UserRepository userRepository, List<UserValidator> validators, Validator beanValidator,
+            EmailService emailService) {
         this.userRepository = userRepository;
         this.validators = validators;
         this.beanValidator = beanValidator;
+        this.emailService = emailService;
     }
 
     @Override
@@ -55,6 +58,14 @@ public class UserServiceImpl implements UserService {
 
         // 6. Persistence
         userRepository.save(user);
+
+        // 7. Email Notification
+        try {
+            emailService.sendWelcomeEmail(user);
+        } catch (Exception e) {
+            // Log error but don't fail registration
+            System.err.println("Failed to send welcome email: " + e.getMessage());
+        }
 
         return mapToResponseDTO(user);
     }

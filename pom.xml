@@ -30,6 +30,7 @@
         <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
         <junit.jupiter.version>5.10.0</junit.jupiter.version>
         <mockito.version>5.5.0</mockito.version>
+        <simple.java.mail.version>8.12.6</simple.java.mail.version>
     </properties>
 
     <dependencyManagement>
@@ -101,6 +102,13 @@
                 <groupId>com.googlecode.libphonenumber</groupId>
                 <artifactId>libphonenumber</artifactId>
                 <version>${libphonenumber.version}</version>
+            </dependency>
+
+            <!-- Email Service -->
+            <dependency>
+                <groupId>org.simplejavamail</groupId>
+                <artifactId>simple-java-mail</artifactId>
+                <version>${simple.java.mail.version}</version>
             </dependency>
 
             <!-- Testing -->
