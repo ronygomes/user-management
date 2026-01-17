@@ -2,72 +2,34 @@ package com.example.service;
 
 import com.example.common.model.User;
 import com.example.common.repository.UserRepository;
-import com.example.common.utils.PasswordValidator;
 import com.example.common.utils.ValidationUtils;
+import com.example.service.validator.UserValidator;
 import org.mindrot.jbcrypt.BCrypt;
 
-import java.util.Optional;
+import java.util.List;
 
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
+    private final List<UserValidator> validators;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, List<UserValidator> validators) {
         this.userRepository = userRepository;
+        this.validators = validators;
     }
 
     @Override
     public void registerUser(User user) {
-        // 1. Normalization
+        // 1. Normalization (Structural/Format prep before business validation)
         user.setEmail(ValidationUtils.normalizeEmail(user.getEmail()));
-        user.setPhoneNumber(ValidationUtils.formatPhoneNumber(user.getPhoneNumber(), "BD")); // Default to BD per
-                                                                                             // requirements
+        user.setPhoneNumber(ValidationUtils.formatPhoneNumber(user.getPhoneNumber(), "BD"));
 
-        // 2. Identity & Uniqueness (Active Users)
-        validateUniqueness(user);
+        // 2. Business Validation (Strategy Pattern)
+        validators.forEach(v -> v.validate(user));
 
-        // 3. Name Validation
-        if (!ValidationUtils.isValidName(user.getFirstName()) || !ValidationUtils.isValidName(user.getLastName())) {
-            throw new RuntimeException("Invalid First Name or Last Name format");
-        }
-
-        // 4. Age Policy (13+)
-        if (!ValidationUtils.isOldEnough(user.getDateOfBirth(), 13)) {
-            throw new RuntimeException("User must be at least 13 years old");
-        }
-
-        // 5. Password Policy
-        String emailPrefix = user.getEmail().split("@")[0];
-        String phoneSuffix = (user.getPhoneNumber() != null && user.getPhoneNumber().length() >= 6)
-                ? user.getPhoneNumber().substring(user.getPhoneNumber().length() - 6)
-                : null;
-        PasswordValidator.validate(user.getPassword(), emailPrefix, phoneSuffix);
-
-        // 6. Security: Hashing
+        // 3. Security: Hashing
         user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
 
-        // 7. Persistence
+        // 4. Persistence
         userRepository.save(user);
-    }
-
-    private void validateUniqueness(User user) {
-        Optional<User> existingEmail = userRepository.findByEmail(user.getEmail());
-        if (existingEmail.isPresent()) {
-            if (existingEmail.get().isDeleted()) {
-                throw new RuntimeException(
-                        "Registration blocked: User previously existed but was soft-deleted. Please contact admin.");
-            }
-            throw new RuntimeException("Email already exists");
-        }
-
-        if (user.getPhoneNumber() != null) {
-            Optional<User> existingPhone = userRepository.findByPhoneNumber(user.getPhoneNumber());
-            if (existingPhone.isPresent()) {
-                if (existingPhone.get().isDeleted()) {
-                    throw new RuntimeException(
-                            "Registration blocked: User previously existed but was soft-deleted. Please contact admin.");
-                }
-                throw new RuntimeException("Phone number already exists");
-            }
-        }
     }
 }

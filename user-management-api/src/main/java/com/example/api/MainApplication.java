@@ -3,7 +3,10 @@ package com.example.api;
 import com.example.repository.mongodb.MongoUserRepository;
 import com.example.service.UserService;
 import com.example.service.UserServiceImpl;
+import com.example.service.validator.*;
 import com.mongodb.client.MongoClients;
+
+import java.util.List;
 
 import static spark.Spark.*;
 
@@ -15,7 +18,16 @@ public class MainApplication {
 
         var mongoClient = MongoClients.create(mongoUri);
         var userRepository = new MongoUserRepository(mongoClient, dbName);
-        UserService userService = new UserServiceImpl(userRepository);
+
+        // Initialize Validators
+        var validators = List.of(
+                new EmailUniquenessValidator(userRepository),
+                new PhoneUniquenessValidator(userRepository),
+                new PasswordPolicyValidator(),
+                new AgePolicyValidator(13),
+                new NameValidator());
+
+        UserService userService = new UserServiceImpl(userRepository, validators);
 
         port(8080);
 
