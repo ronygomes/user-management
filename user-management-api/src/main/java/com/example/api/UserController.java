@@ -1,0 +1,35 @@
+package com.example.api;
+
+import com.example.common.model.User;
+import com.example.service.UserService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import spark.Request;
+import spark.Response;
+
+import static spark.Spark.*;
+
+public class UserController {
+    private final UserService userService;
+    private final ObjectMapper objectMapper = new ObjectMapper();
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+        setupRoutes();
+    }
+
+    private void setupRoutes() {
+        post("/register", this::registerUser);
+    }
+
+    private String registerUser(Request req, Response res) {
+        try {
+            User user = objectMapper.readValue(req.body(), User.class);
+            userService.registerUser(user);
+            res.status(201);
+            return objectMapper.writeValueAsString(user);
+        } catch (Exception e) {
+            res.status(400);
+            return "{\"error\": \"" + e.getMessage() + "\"}";
+        }
+    }
+}
