@@ -19,7 +19,7 @@ public class MainApplication {
     public static void main(String[] args) {
         // Simple manual DI and configuration
         String mongoUri = System.getProperty("mongodb.uri", "mongodb://admin:admin@localhost:27017");
-        String dbName = "user_management";
+        String dbName = "aihackathon_user_management";
 
         var mongoClient = MongoClients.create(mongoUri);
         var userRepository = new MongoUserRepository(mongoClient, dbName);
