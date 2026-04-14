@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.example</groupId>
+    <groupId>me.ronygomes</groupId>
     <artifactId>user-management</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
@@ -20,7 +20,7 @@
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <spark.version>2.9.4</spark.version>
+        <sparkjava.version>2.9.4</sparkjava.version>
         <mongodb.version>4.11.1</mongodb.version>
         <jackson.version>2.15.2</jackson.version>
         <slf4j.version>2.0.7</slf4j.version>
@@ -56,7 +56,7 @@
             <dependency>
                 <groupId>com.sparkjava</groupId>
                 <artifactId>spark-core</artifactId>
-                <version>${spark.version}</version>
+                <version>${sparkjava.version}</version>
             </dependency>
 
             <!-- MongoDB -->
@@ -127,17 +127,17 @@
 
             <!-- Inter-module dependencies -->
             <dependency>
-                <groupId>com.example</groupId>
+                <groupId>me.ronygomes</groupId>
                 <artifactId>user-management-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.example</groupId>
+                <groupId>me.ronygomes</groupId>
                 <artifactId>user-management-repository-mongodb</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>com.example</groupId>
+                <groupId>me.ronygomes</groupId>
                 <artifactId>user-management-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
