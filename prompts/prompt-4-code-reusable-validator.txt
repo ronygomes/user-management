@@ -1,0 +1,4 @@
+Refactor UserServiceImpl.registerUser method.
+
+- Make the validation with an Validator Interface and its implementations for each validation logic.
+- We want to reuse these validators later for updating the user.

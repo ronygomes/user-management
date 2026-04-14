@@ -1,0 +1,5 @@
+Implement this using Java using spark-java framework.
+
+* Have separate projects for each tiers and shared components.
+* Just do the RegisterUser API End to end. I will add more API later.
+* Use MongoDB as database.

@@ -1,0 +1,39 @@
+Update the RegisterUser Flow using the following user story. Password must be hashed using BCrypt before saving.
+Story:
+As a new user
+I want to register an account using my email or mobile number
+So that I can securely access the system and use its services.
+
+User should provide the following information to register.
+- Display Name
+- Email
+- Phone Number
+- First Name
+- Last Name
+- Date Of Birth
+
+Business Rules & Validation (Must-Haves)
+
+Identity & Uniqueness
+
+* A user can register using email (required) and optionally mobile number (if provided, must be verified later).
+* Email must be unique across all active users (case-insensitive).
+* Mobile number must be unique across all active users (normalized format).
+* If a user previously existed but was soft-deleted, registration with the same email/mobile is blocked unless an admin restores the account.
+
+Input Validation
+
+* Email format must be valid and normalized (trim spaces, lowercase domain/user handling as per standard normalization rules).
+* Mobile number must be valid for configured country rules (e.g., Bangladesh +8801XXXXXXXXX) and stored in E.164 format.
+* Password policy:
+   - Min length: 10
+   - Must include uppercase, lowercase, number, special character
+   - Must not contain the user’s email prefix or mobile substring (e.g., last 6 digits)
+   - Must not be in a known weak-password list (top common passwords)
+* First name and last name:
+   - Required
+   - 2–50 chars each
+   - Only letters, spaces, hyphen, apostrophe
+* Date of birth (optional):
+   - If provided, user must be 13+ years old (policy)
+* Display name (optional):

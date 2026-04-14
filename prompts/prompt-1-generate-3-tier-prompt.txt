@@ -1,0 +1,11 @@
+Write a prompt for Coding agent for a 3 tier architecture application for User management.
+
+Ask it to not write any code.
+
+Just plan.
+
+Tier 1 Web API Controller
+Tier 2 Service
+Tier 3 Data Repository
+
+It should use Interfaces and Generics. Services need to be unit testable.

@@ -1,0 +1,5 @@
+Add this feature to the registerUser method of UserService in UserManagement.Service
+project.
+
+- After a user is registered, they will receive an email.
+- Use the Simple Java Mail library to send email.

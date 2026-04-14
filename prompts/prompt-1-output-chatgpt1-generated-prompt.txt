@@ -1,0 +1,62 @@
+# Note: This file generated using ChatGPT from 'prompt1-generate-3-tier-prompt.txt'
+
+You are acting as a software architect, not a coder.
+
+Do NOT write any code (no classes, no methods, no pseudocode).
+Your task is to design and plan a 3-tier architecture for a User Management application.
+
+Architecture Requirements
+
+The system must follow a 3-tier architecture:
+
+Tier 1 – Web API Controller
+
+* Handles HTTP requests and responses
+* Performs input validation and request mapping
+* Delegates all business logic to the Service layer
+* Must depend only on service interfaces, never concrete implementations
+
+Tier 2 – Service Layer
+
+* Contains all business rules for User Management
+* Must be unit testable in isolation
+* Must not depend on Web/API concerns
+* Must use interfaces and dependency injection
+* Must rely on generic repository interfaces
+
+Tier 3 – Data Repository
+
+* Responsible only for data persistence
+* Abstracted behind generic interfaces
+* Must not contain business logic
+* Must be replaceable (e.g., database, in-memory, mock)
+
+Design Constraints
+
+* Use interfaces at every tier boundary
+* Use generics where appropriate (e.g., repositories, base services)
+* Follow SOLID principles
+* Services must be mockable for unit testing
+* No tight coupling between tiers
+
+Deliverables (Planning Only)
+
+Provide:
+
+* A high-level architecture overview
+* Clear responsibilities of each tier
+* Description of key interfaces and their relationships
+* Explanation of how generics are applied
+* Dependency flow between layers
+* How the design supports unit testing of services
+
+Example use case flow (e.g., Create User) - described in words only
+
+Explicit Restrictions
+
+❌ Do NOT write any code
+❌ Do NOT include method signatures
+❌ Do NOT include class definitions
+❌ Do NOT include framework-specific syntax
+
+Focus strictly on architecture, design decisions, and reasoning.

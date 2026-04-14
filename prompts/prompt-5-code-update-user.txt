@@ -1,0 +1,15 @@
+Implement the UpdateUser API full flow. Use the following user story. Use the already available validators.
+As a registered user
+I want to update my profile details
+So that my information stays accurate, while preserving the same validation and security rules defined in UserServiceImpl.registerUser.
+
+Reference Rule
+
+All field-level validation and formatting rules (mobile normalization, where applicable,
+name rules, DOB age rule, uniqueness rules, audit requirements, etc.) must follow the
+UserServiceImpl behaviour unless explicitly overridden below.
+
+- Fields That Cannot Be Updated
+- Email
+- Password
+- IsDeleted
