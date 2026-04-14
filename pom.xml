@@ -17,8 +17,8 @@
     </modules>
 
     <properties>
-        <maven.compiler.source>17</maven.compiler.source>
-        <maven.compiler.target>17</maven.compiler.target>
+        <maven.compiler.source>25</maven.compiler.source>
+        <maven.compiler.target>25</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <sparkjava.version>2.9.4</sparkjava.version>
         <mongodb.version>4.11.1</mongodb.version>
@@ -29,7 +29,7 @@
         <jakarta.validation.version>3.1.0</jakarta.validation.version>
         <hibernate.validator.version>8.0.1.Final</hibernate.validator.version>
         <junit.jupiter.version>5.10.0</junit.jupiter.version>
-        <mockito.version>5.5.0</mockito.version>
+        <mockito.version>5.23.0</mockito.version>
         <simple.java.mail.version>8.12.6</simple.java.mail.version>
     </properties>
 
