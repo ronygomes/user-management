@@ -1,0 +1,46 @@
+info:
+  name: register-user
+  type: http
+  seq: 1
+
+http:
+  method: POST
+  url: "{{baseUrl}}/register"
+  headers:
+    - name: Content-Type
+      value: application/json
+  body:
+    type: json
+    data: |-
+      {
+        "username": "{{$randomUserName}}",
+        "email": "{{$randomEmail}}",
+        "password": "Strong@Password1",
+        "firstName": "{{$randomFirstName}}",
+        "lastName": "{{$randomLastName}}",
+        "displayName": "{{$randomFullName}}",
+        "phoneNumber": "{{$randomPhoneNumber}}",
+        "dateOfBirth": "1995-06-15"
+      }
+  auth: inherit
+
+runtime:
+  scripts:
+    - type: after-response
+      code: |-
+        const body = res.getBody();
+
+        if (body && body.id) {
+          bru.setVar("lastCreatedUserId", body.id);
+          bru.setVar("lastCreatedUser", body);
+          
+          // Known Issue: String starting with "+" is treated as Number
+          bru.getVar("lastCreatedUser").phoneNumber = String(bru.getVar("lastCreatedUser").phoneNumber);
+          console.log("Captured userId: ", body.id);
+        }
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5

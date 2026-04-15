@@ -1,0 +1,50 @@
+info:
+  name: find-user
+  type: http
+  seq: 2
+
+http:
+  method: GET
+  url: "{{baseUrl}}/users/{{lastCreatedUserId}}"
+  auth: inherit
+
+runtime:
+  assertions:
+    - expression: res.body.id
+      operator: eq
+      value: "{{lastCreatedUserId}}"
+    - expression: res.body.username
+      operator: eq
+      value: "{{lastCreatedUser.username}}"
+    - expression: res.body.email
+      operator: eq
+      value: "{{lastCreatedUser.email}}"
+    - expression: res.body.displayName
+      operator: eq
+      value: "{{lastCreatedUser.displayName}}"
+    - expression: res.body.phoneNumber
+      operator: eq
+      value: "{{lastCreatedUser.phoneNumber}}"
+    - expression: res.body.firstName
+      operator: eq
+      value: "{{lastCreatedUser.firstName}}"
+    - expression: res.body.lastName
+      operator: eq
+      value: "{{lastCreatedUser.lastName}}"
+    - expression: res.body.dateOfBirth
+      operator: isArray
+    - expression: res.body.dateOfBirth[0]
+      operator: eq
+      value: "1995"
+    - expression: res.body.dateOfBirth[1]
+      operator: eq
+      value: "6"
+    - expression: res.body.dateOfBirth[2]
+      operator: eq
+      value: "15"
+
+settings:
+  encodeUrl: true
+  timeout: 0
+  followRedirects: true
+  maxRedirects: 5
