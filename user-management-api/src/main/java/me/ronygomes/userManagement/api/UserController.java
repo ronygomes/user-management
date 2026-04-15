@@ -24,6 +24,7 @@ public class UserController {
     private void setupRoutes() {
         get("/hello", (req, res) -> "Hello World");
         post("/register", this::registerUser);
+        get("/users/:id", this::getUser);
         put("/users/:id", this::updateUser);
     }
 
@@ -32,6 +33,20 @@ public class UserController {
             UserRegistrationDto registrationDTO = objectMapper.readValue(req.body(), UserRegistrationDto.class);
             UserResponseDto response = userService.registerUser(registrationDTO);
             res.status(201);
+            res.type("application/json");
+            return objectMapper.writeValueAsString(response);
+        } catch (Exception e) {
+            res.status(400);
+            res.type("application/json");
+            return "{\"error\": \"" + e.getMessage().replace("\"", "\\\"") + "\"}";
+        }
+    }
+
+    private String getUser(Request req, Response res) {
+        try {
+            String id = req.params(":id");
+            UserResponseDto response = userService.findUser(id);
+            res.status(200);
             res.type("application/json");
             return objectMapper.writeValueAsString(response);
         } catch (Exception e) {

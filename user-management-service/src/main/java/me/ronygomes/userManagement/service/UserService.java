@@ -8,5 +8,7 @@ public interface UserService {
 
     UserResponseDto registerUser(UserRegistrationDto registrationDTO);
 
+    UserResponseDto findUser(String id);
+
     UserResponseDto updateUser(String id, UserUpdateDto updateDTO);
 }

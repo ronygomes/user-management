@@ -1,5 +1,7 @@
 package me.ronygomes.userManagement.service;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import me.ronygomes.userManagement.common.dto.UserRegistrationDto;
 import me.ronygomes.userManagement.common.dto.UserResponseDto;
 import me.ronygomes.userManagement.common.dto.UserUpdateDto;
@@ -7,8 +9,6 @@ import me.ronygomes.userManagement.common.model.User;
 import me.ronygomes.userManagement.common.repository.UserRepository;
 import me.ronygomes.userManagement.common.utils.ValidationUtils;
 import me.ronygomes.userManagement.service.validator.UserValidator;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
@@ -23,7 +23,7 @@ public class UserServiceImpl implements UserService {
     private final EmailService emailService;
 
     public UserServiceImpl(UserRepository userRepository, List<UserValidator> validators, Validator beanValidator,
-            EmailService emailService) {
+                           EmailService emailService) {
         this.userRepository = userRepository;
         this.validators = validators;
         this.beanValidator = beanValidator;
@@ -68,6 +68,14 @@ public class UserServiceImpl implements UserService {
         }
 
         return mapToResponseDTO(user);
+    }
+
+    @Override
+    public UserResponseDto findUser(String id) {
+        User existingUser = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        return mapToResponseDTO(existingUser);
     }
 
     @Override
