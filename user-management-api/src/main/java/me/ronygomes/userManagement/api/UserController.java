@@ -1,73 +1,89 @@
 package me.ronygomes.userManagement.api;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import me.ronygomes.userManagement.common.dto.UserRegistrationDto;
 import me.ronygomes.userManagement.common.dto.UserResponseDto;
 import me.ronygomes.userManagement.common.dto.UserUpdateDto;
 import me.ronygomes.userManagement.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import spark.Request;
 import spark.Response;
 
-import static spark.Spark.*;
-
 public class UserController {
+
+    private static final String ERROR_JSON_FORMAT = """
+            { "error": "%s" }
+            """;
+
     private final UserService userService;
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
     public UserController(UserService userService) {
+        this(userService, new ObjectMapper()
+                .registerModule(new JavaTimeModule()));
+    }
+
+    public UserController(UserService userService, ObjectMapper objectMapper) {
         this.userService = userService;
-        this.objectMapper.registerModule(new JavaTimeModule()); // For LocalDate
-        setupRoutes();
+        this.objectMapper = objectMapper;
     }
 
-    private void setupRoutes() {
-        get("/hello", (req, res) -> "Hello World");
-        post("/register", this::registerUser);
-        get("/users/:id", this::getUser);
-        put("/users/:id", this::updateUser);
-    }
-
-    private String registerUser(Request req, Response res) {
+    public String registerUser(Request req, Response res) {
         try {
-            UserRegistrationDto registrationDTO = objectMapper.readValue(req.body(), UserRegistrationDto.class);
-            UserResponseDto response = userService.registerUser(registrationDTO);
-            res.status(201);
-            res.type("application/json");
+            UserRegistrationDto registrationDto = objectMapper.readValue(req.body(), UserRegistrationDto.class);
+            UserResponseDto response = userService.registerUser(registrationDto);
+
+            setJsonResponseStatus(res, 201);
+
             return objectMapper.writeValueAsString(response);
-        } catch (Exception e) {
-            res.status(400);
-            res.type("application/json");
-            return "{\"error\": \"" + e.getMessage().replace("\"", "\\\"") + "\"}";
+        } catch (JsonProcessingException e) {
+            return processJsonProcessingException(res, e.getMessage());
         }
     }
 
-    private String getUser(Request req, Response res) {
+    public String getUser(Request req, Response res) {
         try {
             String id = req.params(":id");
+
             UserResponseDto response = userService.findUser(id);
-            res.status(200);
-            res.type("application/json");
+            setJsonResponseStatus(res, 200);
+
             return objectMapper.writeValueAsString(response);
-        } catch (Exception e) {
-            res.status(400);
-            res.type("application/json");
-            return "{\"error\": \"" + e.getMessage().replace("\"", "\\\"") + "\"}";
+        } catch (JsonProcessingException e) {
+            return processJsonProcessingException(res, e.getMessage());
         }
     }
 
-    private String updateUser(Request req, Response res) {
+    public String updateUser(Request req, Response res) {
         try {
             String id = req.params(":id");
-            UserUpdateDto updateDTO = objectMapper.readValue(req.body(), UserUpdateDto.class);
-            UserResponseDto response = userService.updateUser(id, updateDTO);
-            res.status(200);
-            res.type("application/json");
+
+            UserUpdateDto updateDto = objectMapper.readValue(req.body(), UserUpdateDto.class);
+            UserResponseDto response = userService.updateUser(id, updateDto);
+            setJsonResponseStatus(res, 201);
+
             return objectMapper.writeValueAsString(response);
-        } catch (Exception e) {
-            res.status(400);
-            res.type("application/json");
-            return "{\"error\": \"" + e.getMessage().replace("\"", "\\\"") + "\"}";
+        } catch (JsonProcessingException e) {
+            return processJsonProcessingException(res, e.getMessage());
         }
+    }
+
+    public String processJsonProcessingException(Response res, String message) {
+        setJsonResponseStatus(res, 400);
+
+        return String.format(ERROR_JSON_FORMAT,
+                message.replace("\"", "\\\""));
+    }
+
+    public void validationExceptionHandler(RuntimeException e, Request req, Response res) {
+        setJsonResponseStatus(res, 400);
+        res.body(String.format(ERROR_JSON_FORMAT,
+                e.getMessage().replace("\"", "\\\"")));
+    }
+
+    private void setJsonResponseStatus(Response res, int statusCode) {
+        res.status(statusCode);
+        res.type("application/json");
     }
 }

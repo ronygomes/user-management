@@ -33,7 +33,7 @@ runtime:
         if (body && body.id) {
           bru.setVar("lastCreatedUserId", body.id);
           bru.setVar("lastCreatedUser", body);
-          
+        
           // Known Issue: String starting with "+" is treated as Number
           bru.getVar("lastCreatedUser").phoneNumber = String(bru.getVar("lastCreatedUser").phoneNumber);
           console.log("Captured userId: ", body.id);

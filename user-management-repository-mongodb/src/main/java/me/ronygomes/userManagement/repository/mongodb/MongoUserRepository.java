@@ -1,22 +1,26 @@
 package me.ronygomes.userManagement.repository.mongodb;
 
-import me.ronygomes.userManagement.common.model.User;
-import me.ronygomes.userManagement.common.repository.UserRepository;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.Filters;
+import me.ronygomes.userManagement.common.model.User;
+import me.ronygomes.userManagement.common.repository.UserRepository;
 import org.bson.Document;
 import org.bson.types.ObjectId;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 public class MongoUserRepository implements UserRepository {
+
+    private static final String USERS_COLLECTION_NAME = "users";
+
     private final MongoCollection<Document> collection;
 
     public MongoUserRepository(MongoClient mongoClient, String databaseName) {
         MongoDatabase database = mongoClient.getDatabase(databaseName);
-        this.collection = database.getCollection("users");
+        this.collection = database.getCollection(USERS_COLLECTION_NAME);
     }
 
     @Override
@@ -69,7 +73,7 @@ public class MongoUserRepository implements UserRepository {
         user.setLastName(doc.getString("lastName"));
         String dob = doc.getString("dateOfBirth");
         if (dob != null)
-            user.setDateOfBirth(java.time.LocalDate.parse(dob));
+            user.setDateOfBirth(LocalDate.parse(dob));
         user.setDeleted(doc.getBoolean("isDeleted", false));
         return user;
     }

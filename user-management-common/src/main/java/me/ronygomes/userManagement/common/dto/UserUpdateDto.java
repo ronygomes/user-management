@@ -1,9 +1,11 @@
 package me.ronygomes.userManagement.common.dto;
 
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Size;
+
 import java.time.LocalDate;
 
 public class UserUpdateDto {
+
     @Size(min = 3, max = 20)
     private String username;
 
@@ -19,7 +21,6 @@ public class UserUpdateDto {
 
     private LocalDate dateOfBirth;
 
-    // Getters and Setters
     public String getUsername() {
         return username;
     }

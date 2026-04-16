@@ -1,12 +1,12 @@
 package me.ronygomes.userManagement.service;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validator;
 import me.ronygomes.userManagement.common.dto.UserRegistrationDto;
 import me.ronygomes.userManagement.common.dto.UserResponseDto;
 import me.ronygomes.userManagement.common.model.User;
 import me.ronygomes.userManagement.common.repository.UserRepository;
 import me.ronygomes.userManagement.service.validator.UserValidator;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Validator;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -46,7 +46,7 @@ public class UserServiceImplTest {
 
     @Test
     void registerUser_ShouldSucceed_WhenInputIsValid() {
-        // Arrange
+
         UserRegistrationDto dto = new UserRegistrationDto();
         dto.setUsername("testuser");
         dto.setEmail("test@example.com");
@@ -58,10 +58,8 @@ public class UserServiceImplTest {
 
         when(beanValidator.validate(any())).thenReturn(new HashSet<>());
 
-        // Act
         UserResponseDto result = userService.registerUser(dto);
 
-        // Assert
         assertNotNull(result);
         assertEquals("testuser", result.getUsername());
         assertEquals("test@example.com", result.getEmail());
@@ -74,14 +72,13 @@ public class UserServiceImplTest {
 
     @Test
     void registerUser_ShouldThrowException_WhenBeanValidationFails() {
-        // Arrange
+
         UserRegistrationDto dto = new UserRegistrationDto();
         Set<ConstraintViolation<UserRegistrationDto>> violations = new HashSet<>();
         violations.add(mock(ConstraintViolation.class));
 
         when(beanValidator.validate(dto)).thenReturn(violations);
 
-        // Act & Assert
         assertThrows(RuntimeException.class, () -> userService.registerUser(dto));
         verify(userRepository, never()).save(any());
     }

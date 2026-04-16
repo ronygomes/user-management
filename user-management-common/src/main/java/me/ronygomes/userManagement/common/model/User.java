@@ -3,6 +3,7 @@ package me.ronygomes.userManagement.common.model;
 import java.time.LocalDate;
 
 public class User {
+
     private String id;
     private String username;
     private String email;
@@ -14,7 +15,6 @@ public class User {
     private LocalDate dateOfBirth;
     private boolean isDeleted = false;
 
-    // Default constructor for Jackson/Mongo
     public User() {
     }
 

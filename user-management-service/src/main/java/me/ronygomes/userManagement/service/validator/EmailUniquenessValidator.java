@@ -1,5 +1,6 @@
 package me.ronygomes.userManagement.service.validator;
 
+import me.ronygomes.userManagement.common.exception.ValidationException;
 import me.ronygomes.userManagement.common.model.User;
 import me.ronygomes.userManagement.common.repository.UserRepository;
 
@@ -22,10 +23,10 @@ public class EmailUniquenessValidator implements UserValidator {
             }
 
             if (existing.get().isDeleted()) {
-                throw new RuntimeException(
+                throw new ValidationException(
                         "Registration/Update blocked: User previously existed but was soft-deleted. Please contact admin.");
             }
-            throw new RuntimeException("Email already exists");
+            throw new ValidationException("Email already exists");
         }
     }
 }

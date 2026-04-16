@@ -3,6 +3,7 @@ package me.ronygomes.userManagement.common.dto;
 import java.time.LocalDate;
 
 public class UserResponseDto {
+
     private String id;
     private String username;
     private String email;
@@ -12,7 +13,6 @@ public class UserResponseDto {
     private String lastName;
     private LocalDate dateOfBirth;
 
-    // Getters and Setters
     public String getId() {
         return id;
     }

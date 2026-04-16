@@ -7,7 +7,7 @@ This repository contains code from first day, where we learn to create a 3-tier 
 AntiGravity. Following are directory description of this project
 
 * prompts: Contains text prompts used for generating code.
-* user-management-common: 
-* user-managemet-api: 
-* user-management-repository-mongodb: 
+* user-management-common:
+* user-managemet-api:
+* user-management-repository-mongodb:
 * user-management-service: 

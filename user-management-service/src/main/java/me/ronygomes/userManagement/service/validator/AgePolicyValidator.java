@@ -1,5 +1,6 @@
 package me.ronygomes.userManagement.service.validator;
 
+import me.ronygomes.userManagement.common.exception.ValidationException;
 import me.ronygomes.userManagement.common.model.User;
 import me.ronygomes.userManagement.common.utils.ValidationUtils;
 
@@ -13,7 +14,7 @@ public class AgePolicyValidator implements UserValidator {
     @Override
     public void validate(User user) {
         if (!ValidationUtils.isOldEnough(user.getDateOfBirth(), minAge)) {
-            throw new RuntimeException("User must be at least " + minAge + " years old");
+            throw new ValidationException("User must be at least " + minAge + " years old");
         }
     }
 }

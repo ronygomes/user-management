@@ -3,6 +3,7 @@ package me.ronygomes.userManagement.common.utils;
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.Phonenumber;
+import me.ronygomes.userManagement.common.exception.ValidationException;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -28,14 +29,15 @@ public class ValidationUtils {
                 return phoneUtil.format(phone, PhoneNumberUtil.PhoneNumberFormat.E164);
             }
         } catch (NumberParseException e) {
-            // Fallback or throw exception based on caller preference
+            throw new ValidationException("Unable to parse phone number");
         }
-        return phoneNumber; // or throw exception
+
+        return phoneNumber;
     }
 
     public static boolean isOldEnough(LocalDate dob, int minAge) {
         if (dob == null)
-            return true; // Optional fields don't block
+            return true;
         return Period.between(dob, LocalDate.now()).getYears() >= minAge;
     }
 
