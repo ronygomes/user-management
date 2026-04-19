@@ -2,6 +2,24 @@ opencollection: 1.0.0
 
 info:
   name: bruno-collections
+config:
+  proxy:
+    inherit: true
+    config:
+      protocol: http
+      hostname: ""
+      port: ""
+      auth:
+        username: ""
+        password: ""
+      bypassProxy: ""
+
+request:
+  scripts:
+    - type: before-request
+      code: |-
+        const randomNumber = Math.floor(Math.random() * 900000000) + 100000000;
+        bru.setVar("BDPhoneNumber", "+8801" + randomNumber);
 bundled: false
 extensions:
   bruno:

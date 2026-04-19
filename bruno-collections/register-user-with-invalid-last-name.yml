@@ -1,7 +1,7 @@
 info:
-  name: register-user
+  name: register-user-with-invalid-last-name
   type: http
-  seq: 1
+  seq: 12
 
 http:
   method: POST
@@ -16,11 +16,10 @@ http:
         "username": "{{$randomUserName}}",
         "email": "{{$randomEmail}}",
         "password": "Strong@Password1",
-        "firstName": "{{$randomFirstName}}",
-        "lastName": "{{$randomLastName}}",
-        "displayName": "{{$randomFullName}}",
+        "lastName": "__def__",
+        "firstName": "{{$randomLastName}}",
         "phoneNumber": "{{BDPhoneNumber}}",
-        "dateOfBirth": "1995-06-15"
+        "dateOfBirth": "2005-06-11"
       }
   auth: inherit
 
@@ -38,6 +37,13 @@ runtime:
           bru.getVar("lastCreatedUser").phoneNumber = String(bru.getVar("lastCreatedUser").phoneNumber);
           console.log("Captured userId: ", body.id);
         }
+  assertions:
+    - expression: res.status
+      operator: eq
+      value: "400"
+    - expression: res.body.error
+      operator: eq
+      value: Invalid First Name or Last Name format
 
 settings:
   encodeUrl: true

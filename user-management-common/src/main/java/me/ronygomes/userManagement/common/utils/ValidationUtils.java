@@ -25,14 +25,14 @@ public class ValidationUtils {
         PhoneNumberUtil phoneUtil = PhoneNumberUtil.getInstance();
         try {
             Phonenumber.PhoneNumber phone = phoneUtil.parse(phoneNumber, defaultCountry);
-            if (phoneUtil.isValidNumber(phone)) {
-                return phoneUtil.format(phone, PhoneNumberUtil.PhoneNumberFormat.E164);
+            if (!phoneUtil.isValidNumber(phone)) {
+                throw new ValidationException("Invalid phone number");
             }
+
+            return phoneUtil.format(phone, PhoneNumberUtil.PhoneNumberFormat.E164);
         } catch (NumberParseException e) {
             throw new ValidationException("Unable to parse phone number");
         }
-
-        return phoneNumber;
     }
 
     public static boolean isOldEnough(LocalDate dob, int minAge) {

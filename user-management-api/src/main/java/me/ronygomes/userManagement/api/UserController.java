@@ -65,7 +65,7 @@ public class UserController {
 
             return objectMapper.writeValueAsString(response);
         } catch (JsonProcessingException e) {
-            return processJsonProcessingException(res, e.getMessage());
+            return processJsonProcessingException(res, e.getOriginalMessage());
         }
     }
 
