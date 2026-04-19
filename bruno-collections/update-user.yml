@@ -34,7 +34,7 @@ runtime:
   assertions:
     - expression: res.status
       operator: eq
-      value: "400"
+      value: "201"
     - expression: res.body.displayName
       operator: eq
       value: Updated

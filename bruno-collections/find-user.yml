@@ -9,6 +9,9 @@ http:
   auth: inherit
 
 runtime:
+  scripts:
+    - type: before-request
+      code: const updateResponse = await bru.runRequest("register-user");
   assertions:
     - expression: res.body.id
       operator: eq

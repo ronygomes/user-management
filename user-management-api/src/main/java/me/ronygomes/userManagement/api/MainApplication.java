@@ -26,7 +26,6 @@ public class MainApplication {
     private static void setupRoutes(ConfigurationManager m) {
         var controller = new UserController(m.getUserService());
 
-        get("/hello", (req, res) -> "Hello World");
         post("/register", controller::registerUser);
         get("/users/:id", controller::getUser);
         put("/users/:id", controller::updateUser);
