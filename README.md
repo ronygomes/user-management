@@ -21,7 +21,6 @@ Contains 3 API endpoints
 | POST   | `/register`  | Register user            |
 | PUT    | `/users/:id` | Update certain user data |
 
-
 ## Build & Run
 
 Assuming SDKMan is installed, following command in project root will build the project:
@@ -33,6 +32,7 @@ $ ./mvnw clean package
 ```
 
 Following commands will make the application available at http://localhost:8080.
+
 ```shell
 # Run MongoDB in container
 $ docker compose up -d
@@ -41,7 +41,8 @@ $ java -jar user-management-api/target/user-management-api-1.0-SNAPSHOT.jar
 
 ## Test
 
-This project contains bruno-collection, can run using following command:
+This project doesn't contain Unit Tests. But provides **Bruno collections** which can run using the following command:
+
 ```shell
 $ cd bruno-collections
 
@@ -50,9 +51,18 @@ $ cd bruno-collections
 $ bru run --env-var baseUrl="http://localhost:8080" --sandbox=developer
 ```
 
+**Note:** Email is sent after successful registration. Update constants `DEFAULT_SMTP_USER` and
+`DEFAULT_SMTP_PASSWORD` in ConfigurationManager.java file of `user-management-api` module.
+Alternatively can provide with `smtp.username` and `smtp.password` JVM property.
+
 [1]: ./prompts
+
 [2]: ./user-management-common
+
 [3]: ./user-management-api
+
 [4]: ./user-management-repository-mongodb
+
 [5]: ./user-management-service
+
 [6]: ./bruno-collections

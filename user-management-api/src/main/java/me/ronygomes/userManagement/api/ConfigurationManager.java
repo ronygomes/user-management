@@ -21,15 +21,17 @@ public class ConfigurationManager {
     private static final String DATABASE_NAME = "aihackathon_user_management";
 
     private static final String DEFAULT_SMTP_HOST = "sandbox.smtp.mailtrap.io";
-    private static final String DEFAULT_SMTP_USER = "8ba1d650eb9fb3";
-    private static final String DEFAULT_PASSWORD = "ee9e0484aeef9a";
+
+    // Replace credential of free test sandbox from mailtrap.io
+    private static final String DEFAULT_SMTP_USER = "";
+    private static final String DEFAULT_SMTP_PASSWORD = "";
 
     private static final String MONGO_URL = System.getProperty("mongodb.uri", DEFAULT_MONGO_URL);
 
     private static final String SMTP_HOST = System.getProperty("smtp.host", DEFAULT_SMTP_HOST);
     private static final int SMTP_PORT = Integer.getInteger("smtp.port", 25);
     private static final String SMTP_USER = System.getProperty("smtp.username", DEFAULT_SMTP_USER);
-    private static final String SMTP_PASS = System.getProperty("smtp.password", DEFAULT_PASSWORD);
+    private static final String SMTP_PASS = System.getProperty("smtp.password", DEFAULT_SMTP_PASSWORD);
     private static final String SMTP_FROM_EMAIL = System.getProperty("smtp.from", "noreply@example.com");
 
     private final MongoClient mongoClient;

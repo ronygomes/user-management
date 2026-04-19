@@ -9,6 +9,15 @@ import org.simplejavamail.mailer.MailerBuilder;
 
 public class SimpleEmailServiceImpl implements EmailService {
 
+    private static final String EMAIL_FROM_NAME = "User Management System";
+    private static final String EMAIL_BODY_SUBJECT = "Welcome to User Management System!";
+
+    private static final String EMAIL_BODY_TEMPLATE = """
+            Hello %s,
+            
+            Welcome to our platform! Your account has been successfully registered.
+            """;
+
     private final Mailer mailer;
     private final String fromEmail;
 
@@ -23,11 +32,10 @@ public class SimpleEmailServiceImpl implements EmailService {
     @Override
     public void sendWelcomeEmail(User user) {
         Email email = EmailBuilder.startingBlank()
-                .from("User Management", fromEmail)
+                .from(EMAIL_FROM_NAME, fromEmail)
                 .to(user.getFirstName() + " " + user.getLastName(), user.getEmail())
-                .withSubject("Welcome to User Management System!")
-                .withPlainText("Hello " + user.getFirstName()
-                        + ",\n\nWelcome to our platform! Your account has been successfully registered.")
+                .withSubject(EMAIL_BODY_SUBJECT)
+                .withPlainText(EMAIL_BODY_TEMPLATE.formatted(user.getFirstName()))
                 .buildEmail();
 
         mailer.sendMail(email);
